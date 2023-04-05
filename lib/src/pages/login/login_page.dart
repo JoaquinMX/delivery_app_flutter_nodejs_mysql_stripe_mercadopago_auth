@@ -1,6 +1,10 @@
+import 'package:delivery_app/src/pages/login/login_controller.dart';
 import 'package:flutter/material.dart';
-
+import 'package:get/get.dart';
 class LoginPage extends StatelessWidget {
+
+  LoginController controller = Get.put(LoginController());
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -79,6 +83,7 @@ class LoginPage extends StatelessWidget {
         horizontal: 40
       ),
       child: TextField(
+        controller: controller.emailController,
         keyboardType: TextInputType.emailAddress,
         decoration: InputDecoration(
           hintText: 'Correo Electrónico',
@@ -94,10 +99,11 @@ class LoginPage extends StatelessWidget {
         horizontal: 40
       ),
       child: TextField(
+        controller: controller.passwordController,
         keyboardType: TextInputType.text,
         obscureText: true,
         decoration: InputDecoration(
-            hintText: 'Cotraseña',
+            hintText: 'Contraseña',
             prefixIcon: Icon(Icons.lock)
         ),
       ),
@@ -115,7 +121,7 @@ class LoginPage extends StatelessWidget {
         style: ElevatedButton.styleFrom(
           padding: EdgeInsets.symmetric(vertical: 15)
         ),
-          onPressed: () => {},
+          onPressed: () => controller.login(),
           child: Text(
             'Login',
             style: TextStyle(
@@ -152,12 +158,15 @@ class LoginPage extends StatelessWidget {
             fontSize: 17
           ),
         ),
-        Text(
-            'Registrate aquí',
-          style: TextStyle(
-            color: Colors.amber,
-            fontWeight: FontWeight.bold,
-            fontSize: 17
+        GestureDetector(
+          onTap: () => controller.goToRegisterPage(),
+          child: Text(
+              'Registrate aquí',
+            style: TextStyle(
+              color: Colors.amber,
+              fontWeight: FontWeight.bold,
+              fontSize: 17
+            ),
           ),
         )
       ],
