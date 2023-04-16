@@ -1,3 +1,5 @@
+import 'package:delivery_app/src/pages/user.dart';
+import 'package:delivery_app/src/providers/users_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -10,8 +12,9 @@ class RegisterController extends GetxController {
   TextEditingController passwordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
 
+  UsersProviders usersProvider = UsersProviders();
 
-  void register() {
+  void register() async {
     String email = emailController.text.trim();
     String name = nameController.text.trim();
     String lastName = lastNameController.text.trim();
@@ -19,12 +22,17 @@ class RegisterController extends GetxController {
     String password = passwordController.text.trim();
     String confirmPassword = confirmPasswordController.text.trim();
 
-    print('Email ${email}');
-    print('Password ${password}');
-
     if (isValidForm(email, name, lastName, phone, password, confirmPassword)) {
       Get.snackbar('Formulario valido', 'Listo para ingresar');
+      User user = User(
+          email: email,
+          name: name,
+          lastname: lastName,
+          phone: phone,
+          password: password);
+      Response response = await usersProvider.create(user);
 
+      print("Response:  ${response.body}");
     }
   }
 
