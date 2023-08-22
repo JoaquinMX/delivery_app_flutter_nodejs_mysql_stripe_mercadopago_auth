@@ -1,10 +1,15 @@
 import 'dart:io';
 
-import 'package:delivery_app/src/pages/user.dart';
+import 'package:delivery_app/src/models/response_api.dart';
+import 'package:delivery_app/src/models/user.dart';
 import 'package:delivery_app/src/providers/users_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:image_picker/image_picker.dart';
+import 'dart:convert';
+
+import 'package:sn_progress_dialog/progress_dialog.dart';
 
 class RegisterController extends GetxController {
 
@@ -18,7 +23,7 @@ class RegisterController extends GetxController {
   UsersProvider usersProvider = UsersProvider();
   ImagePicker picker = ImagePicker();
   File? imageFile;
-  void register() async {
+  void register(BuildContext context) async {
     String email = emailController.text.trim();
     String name = nameController.text.trim();
     String lastName = lastNameController.text.trim();
@@ -27,7 +32,8 @@ class RegisterController extends GetxController {
     String confirmPassword = confirmPasswordController.text.trim();
 
     if (isValidForm(email, name, lastName, phone, password, confirmPassword)) {
-      Get.snackbar('Formulario valido', 'Listo para ingresar');
+      ProgressDialog progressDialog = ProgressDialog(context: context);
+      progressDialog.show(max: 100, msg: 'Registrando datos...');
       User user = User(
           email: email,
           name: name,
@@ -35,9 +41,27 @@ class RegisterController extends GetxController {
           phone: phone,
           password: password
       );
-      Response response = await usersProvider.create(user);
+      
+      Stream stream = await usersProvider.createWithImage(user, imageFile!);
+      stream.listen((res) {
+        progressDialog.close();
+        ResponseApi responseApi = ResponseApi.fromJson(json.decode(res));
+        if (responseApi.success == true) {
+          GetStorage().write('user', responseApi.data);
+          Get.snackbar('Login Exitoso', responseApi.message ?? '');
+          goToClientProductList();
+        }
+        else  {
+          Get.snackbar('Registro Fallido', responseApi.message ?? "");
+        }
+      });
+      //Response response = await usersProvider.create(user);
 
     }
+
+  }
+  void goToClientProductList() {
+    Get.offNamedUntil('/client/products/list', (route) => false);
   }
 
   bool isValidForm(
@@ -89,6 +113,11 @@ class RegisterController extends GetxController {
 
     if (password != confirmPassword) {
       Get.snackbar('Formulario no valido', 'Las contraseñas no coinciden');
+      return false;
+    }
+
+    if (imageFile == null) {
+      Get.snackbar('Formulario no valido', 'Debes seleccionar una imagen de perfil');
       return false;
     }
     return true;

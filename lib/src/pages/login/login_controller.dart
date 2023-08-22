@@ -4,7 +4,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
+import '../../models/user.dart';
+
 class LoginController extends GetxController {
+  User user = User.fromJson(GetStorage().read('user') ?? {});
 
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
@@ -24,8 +27,11 @@ class LoginController extends GetxController {
       ResponseApi responseApi = await usersProvider.login(email, password);
       if (responseApi.success == true) {
         GetStorage().write('user', responseApi.data);
-        Get.snackbar('Login Exitoso', responseApi.message ?? '');
-        goToHomePage();
+        if(user.roles!.length > 1) {
+          goToRolesPage();
+        }
+        goToClientProductsPage();
+
       }
       else {
         Get.snackbar('Login Fallido', responseApi.message ?? '');
@@ -33,8 +39,12 @@ class LoginController extends GetxController {
     }
   }
 
-  void goToHomePage() {
-    Get.offNamedUntil('/home', (route) => false);
+  void goToClientProductsPage() {
+    Get.offNamedUntil('/client/products/list/', (route) => false);
+  }
+
+  void goToRolesPage() {
+    Get.offNamedUntil('/roles', (route) => false);
   }
 
   bool isValidForm(String email, String password) {
