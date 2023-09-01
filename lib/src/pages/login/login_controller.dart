@@ -30,7 +30,7 @@ class LoginController extends GetxController {
         if(user.roles!.length > 1) {
           goToRolesPage();
         }
-        goToClientProductsPage();
+        goToClientHomePage();
 
       }
       else {
@@ -39,8 +39,8 @@ class LoginController extends GetxController {
     }
   }
 
-  void goToClientProductsPage() {
-    Get.offNamedUntil('/client/products/list/', (route) => false);
+  void goToClientHomePage() {
+    Get.offNamedUntil('/client/home/', (route) => false);
   }
 
   void goToRolesPage() {

@@ -20,12 +20,12 @@ class User {
 
   User({
     this.id,
-    required this.email,
+    this.email,
     required this.name,
     required this.lastname,
     required this.phone,
     this.image,
-    required this.password,
+    this.password,
     this.sessionToken,
     this.roles
   });
