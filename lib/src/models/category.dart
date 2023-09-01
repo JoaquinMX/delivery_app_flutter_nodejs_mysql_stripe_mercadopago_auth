@@ -21,6 +21,17 @@ class Category {
     description: json["description"],
   );
 
+  static List<Category> fromJsonList(List<dynamic> jsonList) {
+    List<Category> toList = [];
+
+    jsonList.forEach((item) {
+      Category category = Category.fromJson(item);
+      toList.add(category);
+    });
+
+    return toList;
+  }
+
   Map<String, dynamic> toJson() => {
     "id": id,
     "name": name,

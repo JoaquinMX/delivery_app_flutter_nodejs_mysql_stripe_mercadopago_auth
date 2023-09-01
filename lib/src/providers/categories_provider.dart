@@ -9,6 +9,26 @@ class CategoriesProvider extends GetConnect {
   String url = Environment.API_URL + "/api/categories";
   User userSession = User.fromJson(GetStorage().read('user') ?? {});
 
+  Future<List<Category>> getAll() async {
+
+    Response response = await get(
+        "$url/getAll",
+        headers: {
+          "Content-Type":"application/json",
+          'Authorization': userSession.sessionToken ?? ""
+        }
+    );
+
+    if (response.statusCode == 401) {
+      Get.snackbar('Petición denegada', 'Tu usuario no tiene permitido obtener esta información');
+      return [];
+    }
+
+    List<Category> categories = Category.fromJsonList(response.body);
+
+    return categories;
+  }
+
   Future<ResponseApi> create(Category category) async {
 
     Response response = await post(
