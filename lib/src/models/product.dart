@@ -35,7 +35,7 @@ class Product {
     image2: json["image2"],
     image3: json["image3"],
     id_category: json["id_category"],
-    price: json["price"]?.toDouble(),
+    price: double.parse(json["price"]),
     quantity: json["quantity"],
   );
 
@@ -50,4 +50,15 @@ class Product {
     "price": price,
     "quantity": quantity,
   };
+
+  static List<Product> fromJsonList(List<dynamic> jsonList) {
+    List<Product> toList = [];
+
+    jsonList.forEach((item) {
+      Product category = Product.fromJson(item);
+      toList.add(category);
+    });
+
+    return toList;
+  }
 }

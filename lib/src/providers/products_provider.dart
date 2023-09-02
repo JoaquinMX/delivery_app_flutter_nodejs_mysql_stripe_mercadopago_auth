@@ -9,6 +9,7 @@ import 'package:http/http.dart' as http;
 import 'package:path/path.dart';
 
 class ProductsProvider extends GetConnect {
+  String url = Environment.API_URL + "/api/products";
   User userSession = User.fromJson(GetStorage().read('user') ?? {});
 
   Future<Stream> create(Product product, List<File> images) async {
@@ -27,5 +28,25 @@ class ProductsProvider extends GetConnect {
     request.fields['product'] = json.encode(product);
     final response = await request.send();
     return response.stream.transform(utf8.decoder);
+  }
+
+  Future<List<Product>> findByCategory(String id_category) async {
+
+    Response response = await get(
+        "$url/findByCategory/${id_category}",
+        headers: {
+          "Content-Type":"application/json",
+          'Authorization': userSession.sessionToken ?? ""
+        }
+    );
+
+    if (response.statusCode == 401) {
+      Get.snackbar('Petición denegada', 'Tu usuario no tiene permitido obtener esta información');
+      return [];
+    }
+
+    List<Product> products = Product.fromJsonList(response.body);
+
+    return products;
   }
 }
