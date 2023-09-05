@@ -6,12 +6,12 @@ String categoryToJson(Product data) => json.encode(data.toJson());
 
 class Product {
   String? id;
-  String? name;
-  String? description;
+  String name;
+  String description;
   String? image1;
   String? image2;
   String? image3;
-  String? id_category;
+  String id_category;
   double? price;
   int? quantity;
 
@@ -28,15 +28,15 @@ class Product {
   });
 
   factory Product.fromJson(Map<String, dynamic> json) => Product(
-    id: json["id"],
+    id: json["id"] ?? '',
     name: json["name"],
     description: json["description"],
-    image1: json["image1"],
-    image2: json["image2"],
-    image3: json["image3"],
+    image1: json["image1"] ?? '',
+    image2: json["image2"] ?? '',
+    image3: json["image3"] ?? '',
     id_category: json["id_category"],
-    price: double.parse(json["price"]),
-    quantity: json["quantity"],
+    price:  json["price"] != null ?  double.parse(json["price"].toString()) : 999999.99,
+    quantity: json["quantity"] != null ? json["quantity"] : null,
   );
 
   Map<String, dynamic> toJson() => {
@@ -55,8 +55,8 @@ class Product {
     List<Product> toList = [];
 
     jsonList.forEach((item) {
-      Product category = Product.fromJson(item);
-      toList.add(category);
+      Product product = Product.fromJson(item);
+      toList.add(product);
     });
 
     return toList;

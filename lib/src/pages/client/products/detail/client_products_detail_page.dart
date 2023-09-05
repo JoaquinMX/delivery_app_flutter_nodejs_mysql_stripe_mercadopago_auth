@@ -6,10 +6,12 @@ import 'package:get/get.dart';
 
 class ClientProductDetailPage extends StatelessWidget {
 
-  Product product;
-  ClientProductsDetailController controller = Get.put(ClientProductsDetailController());
+  final Product product;
+  late final ClientProductsDetailController controller;
 
-  ClientProductDetailPage({required this.product});
+  ClientProductDetailPage({required this.product}) {
+    controller = Get.put(ClientProductsDetailController(product));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,44 +33,42 @@ class ClientProductDetailPage extends StatelessWidget {
   }
 
   Widget _imageSlideshow(BuildContext context) {
-    return SafeArea(
-        child: Stack(
-          children: <Widget>[
-            ImageSlideshow(
-                width: double.infinity,
-                height: MediaQuery.of(context).size.height * .35,
-                initialPage: 0,
-                indicatorColor: Colors.amber,
-                indicatorBackgroundColor: Colors.grey,
-                children: [
-                  FadeInImage(
-                    fit: BoxFit.cover,
-                      fadeInDuration: Duration(milliseconds: 50),
-                      placeholder: AssetImage('assets/img/no-image.png'),
-                      image: product.image1 != null
-                      ? NetworkImage(product.image1!)
-                      : AssetImage('assets/img/no-image.png') as ImageProvider,
-                  ),
-                  FadeInImage(
-                    fit: BoxFit.cover,
-                      fadeInDuration: Duration(milliseconds: 50),
-                      placeholder: AssetImage('assets/img/no-image.png'),
-                      image: product.image2 != null
-                      ? NetworkImage(product.image2!)
-                      : AssetImage('assets/img/no-image.png') as ImageProvider,
-                  ),
-                  FadeInImage(
-                    fit: BoxFit.cover,
-                      fadeInDuration: Duration(milliseconds: 50),
-                      placeholder: AssetImage('assets/img/no-image.png'),
-                      image: product.image3 != null
-                      ? NetworkImage(product.image3!)
-                      : AssetImage('assets/img/no-image.png') as ImageProvider,
-                  )
-                ]
-            )
-          ],
+    return Stack(
+      children: <Widget>[
+        ImageSlideshow(
+            width: double.infinity,
+            height: MediaQuery.of(context).size.height * .35,
+            initialPage: 0,
+            indicatorColor: Colors.amber,
+            indicatorBackgroundColor: Colors.grey,
+            children: [
+              FadeInImage(
+                fit: BoxFit.cover,
+                  fadeInDuration: Duration(milliseconds: 50),
+                  placeholder: AssetImage('assets/img/no-image.png'),
+                  image: product.image1 != null
+                  ? NetworkImage(product.image1!)
+                  : AssetImage('assets/img/no-image.png') as ImageProvider,
+              ),
+              FadeInImage(
+                fit: BoxFit.cover,
+                  fadeInDuration: Duration(milliseconds: 50),
+                  placeholder: AssetImage('assets/img/no-image.png'),
+                  image: product.image2 != null
+                  ? NetworkImage(product.image2!)
+                  : AssetImage('assets/img/no-image.png') as ImageProvider,
+              ),
+              FadeInImage(
+                fit: BoxFit.cover,
+                  fadeInDuration: Duration(milliseconds: 50),
+                  placeholder: AssetImage('assets/img/no-image.png'),
+                  image: product.image3 != null
+                  ? NetworkImage(product.image3!)
+                  : AssetImage('assets/img/no-image.png') as ImageProvider,
+              )
+            ]
         )
+      ],
     );
   }
 
@@ -116,7 +116,7 @@ class ClientProductDetailPage extends StatelessWidget {
         right: 20
       ),
       child: Text(
-        "${product.price?.toStringAsFixed(2)}\$" ?? '',
+        "${product.price?.toStringAsFixed(2)}\$" ?? "",
         style: TextStyle(
           fontWeight: FontWeight.bold,
           color: Colors.black,
@@ -131,85 +131,87 @@ class ClientProductDetailPage extends StatelessWidget {
       children: [
         Divider(height: 2, color: Colors.grey),
         SizedBox(height: 25),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ElevatedButton(
-                onPressed: () {},
-                child: Text(
-                    " -",
-                  style: TextStyle(
-                    fontSize: 22,
-                    color: Colors.black,
+        Obx(
+          () => Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ElevatedButton(
+                  onPressed: () => controller.removeItem(),
+                  child: Text(
+                      " -",
+                    style: TextStyle(
+                      fontSize: 22,
+                      color: Colors.black,
 
+                    ),
                   ),
-                ),
-              style: ElevatedButton.styleFrom(
-                  minimumSize: Size(38, 37),
-                primary: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(25),
-                    bottomLeft: Radius.circular(25)
-                  )
-                )
-              ),
-            ),
-            ElevatedButton(
-                onPressed: () {},
-                child: Text(
-                    "0",
-                  style: TextStyle(
-                    fontSize: 22,
-                    color: Colors.black,
-
-                  ),
-                ),
-              style: ElevatedButton.styleFrom(
-                primary: Colors.white,
-                minimumSize: Size(40, 37)
-              ),
-            ),
-            ElevatedButton(
-              onPressed: () {},
-              child: Text(
-                "+ ",
-                style: TextStyle(
-                  fontSize: 22,
-                  color: Colors.black,
-
-                ),
-              ),
-              style: ElevatedButton.styleFrom(
-                  minimumSize: Size(38, 37),
+                style: ElevatedButton.styleFrom(
+                    minimumSize: Size(38, 37),
                   primary: Colors.white,
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.only(
-                          topRight: Radius.circular(25),
-                          bottomRight: Radius.circular(25)
-                      )
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(25),
+                      bottomLeft: Radius.circular(25)
+                    )
                   )
-              ),
-            ),
-            Padding(padding: EdgeInsets.symmetric(horizontal: 10)),
-            ElevatedButton(
-              onPressed: () {},
-              child: Text(
-                "Agregar ${product.price?.toStringAsFixed(2)}\$" ?? '',
-                style: TextStyle(
-                  fontSize: 18,
-                  color: Colors.black,
-
                 ),
               ),
-              style: ElevatedButton.styleFrom(
-                  primary: Colors.amber,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(25)
-                  )
+              ElevatedButton(
+                  onPressed: () {},
+                  child: Text(
+                      controller.counter.value.toString(),
+                    style: TextStyle(
+                      fontSize: 22,
+                      color: Colors.black,
+
+                    ),
+                  ),
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.white,
+                  minimumSize: Size(40, 37)
+                ),
               ),
-            ),
-          ],
+              ElevatedButton(
+                onPressed: () => controller.addItem(),
+                child: Text(
+                  "+ ",
+                  style: TextStyle(
+                    fontSize: 22,
+                    color: Colors.black,
+
+                  ),
+                ),
+                style: ElevatedButton.styleFrom(
+                    minimumSize: Size(38, 37),
+                    primary: Colors.white,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.only(
+                            topRight: Radius.circular(25),
+                            bottomRight: Radius.circular(25)
+                        )
+                    )
+                ),
+              ),
+              Padding(padding: EdgeInsets.symmetric(horizontal: 10)),
+              ElevatedButton(
+                onPressed: () => controller.addToBag(),
+                child: Text(
+                  "Agregar ${controller.price.value.toStringAsFixed(2)}\$",
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: Colors.black,
+
+                  ),
+                ),
+                style: ElevatedButton.styleFrom(
+                    primary: Colors.amber,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(25)
+                    )
+                ),
+              ),
+            ],
+          ),
         ),
       ],
     );
