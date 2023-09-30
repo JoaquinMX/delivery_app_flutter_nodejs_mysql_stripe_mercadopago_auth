@@ -6,29 +6,28 @@ import 'package:get/get.dart';
 
 class ClientProductDetailPage extends StatelessWidget {
 
-  final Product product;
   late final ClientProductsDetailController controller;
-
+  Product product;
   ClientProductDetailPage({required this.product}) {
-    controller = Get.put(ClientProductsDetailController(product));
+    controller = Get.put(ClientProductsDetailController());
   }
-
+  
   @override
   Widget build(BuildContext context) {
+    controller.checkIfProductWasAdded(product);
     return Scaffold(
-      body: Column(
-        children: <Widget>[
-          _imageSlideshow(context),
-          _textNameProduct(),
-          _textPriceProduct(),
-          _textDescriptionProduct(),
-        ],
-      ),
-      bottomNavigationBar: Container(
-          height: 100,
-          child: _buttonsAddToBag()
-      ),
-
+        body: Column(
+          children: <Widget>[
+            _imageSlideshow(context),
+            _textNameProduct(),
+            _textPriceProduct(),
+            _textDescriptionProduct(),
+          ],
+        ),
+        bottomNavigationBar: Container(
+              height: 100,
+              child: _buttonsAddToBag()
+          ),
     );
   }
 
@@ -127,93 +126,92 @@ class ClientProductDetailPage extends StatelessWidget {
   }
 
   Widget _buttonsAddToBag() {
-    return Column(
-      children: [
-        Divider(height: 2, color: Colors.grey),
-        SizedBox(height: 25),
-        Obx(
-          () => Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ElevatedButton(
-                  onPressed: () => controller.removeItem(),
-                  child: Text(
-                      " -",
-                    style: TextStyle(
-                      fontSize: 22,
-                      color: Colors.black,
+    return Obx(
+        () => Column(
+        children: [
+          Divider(height: 2, color: Colors.grey),
+          SizedBox(height: 25),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                    onPressed: () => controller.removeItem(product),
+                    child: Text(
+                        " -",
+                      style: TextStyle(
+                        fontSize: 22,
+                        color: Colors.black,
 
+                      ),
                     ),
-                  ),
-                style: ElevatedButton.styleFrom(
-                    minimumSize: Size(38, 37),
-                  primary: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(25),
-                      bottomLeft: Radius.circular(25)
-                    )
-                  )
-                ),
-              ),
-              ElevatedButton(
-                  onPressed: () {},
-                  child: Text(
-                      controller.counter.value.toString(),
-                    style: TextStyle(
-                      fontSize: 22,
-                      color: Colors.black,
-
-                    ),
-                  ),
-                style: ElevatedButton.styleFrom(
-                  primary: Colors.white,
-                  minimumSize: Size(40, 37)
-                ),
-              ),
-              ElevatedButton(
-                onPressed: () => controller.addItem(),
-                child: Text(
-                  "+ ",
-                  style: TextStyle(
-                    fontSize: 22,
-                    color: Colors.black,
-
-                  ),
-                ),
-                style: ElevatedButton.styleFrom(
-                    minimumSize: Size(38, 37),
+                  style: ElevatedButton.styleFrom(
+                      minimumSize: Size(38, 37),
                     primary: Colors.white,
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.only(
-                            topRight: Radius.circular(25),
-                            bottomRight: Radius.circular(25)
-                        )
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(25),
+                        bottomLeft: Radius.circular(25)
+                      )
                     )
-                ),
-              ),
-              Padding(padding: EdgeInsets.symmetric(horizontal: 10)),
-              ElevatedButton(
-                onPressed: () => controller.addToBag(),
-                child: Text(
-                  "Agregar ${controller.price.value.toStringAsFixed(2)}\$",
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: Colors.black,
-
                   ),
                 ),
-                style: ElevatedButton.styleFrom(
-                    primary: Colors.amber,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(25)
-                    )
+                ElevatedButton(
+                    onPressed: () {},
+                    child: Text(
+                        controller.counter.value.toString(),
+                      style: TextStyle(
+                        fontSize: 22,
+                        color: Colors.black,
+                      ),
+                    ),
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.white,
+                    minimumSize: Size(40, 37)
+                  ),
                 ),
-              ),
-            ],
-          ),
-        ),
-      ],
+                ElevatedButton(
+                  onPressed: () => controller.addItem(product),
+                  child: Text(
+                    "+ ",
+                    style: TextStyle(
+                      fontSize: 22,
+                      color: Colors.black,
+
+                    ),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                      minimumSize: Size(38, 37),
+                      primary: Colors.white,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.only(
+                              topRight: Radius.circular(25),
+                              bottomRight: Radius.circular(25)
+                          )
+                      )
+                  ),
+                ),
+                Padding(padding: EdgeInsets.symmetric(horizontal: 10)),
+                ElevatedButton(
+                  onPressed: () => controller.addToBag(product),
+                  child: Text(
+                    "Agregar ${controller.price.value.toStringAsFixed(2)}\$",
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.black,
+
+                    ),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                      primary: Colors.amber,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(25)
+                      )
+                  ),
+                ),
+              ],
+            ),
+        ],
+      ),
     );
   }
 }

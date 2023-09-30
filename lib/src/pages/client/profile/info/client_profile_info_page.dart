@@ -15,7 +15,14 @@ class ClientProfileInfoPage extends StatelessWidget {
               _backgroundCover(context),
               _boxForm(context),
               _imageUser(context),
-              _buttonSignOut()
+              SafeArea(
+                child: Column(
+                  children: [
+                    _buttonGoToRoles(),
+                    _buttonSignOut(),
+                  ],
+                ),
+              )
             ],
           ),
         )
@@ -63,7 +70,7 @@ class ClientProfileInfoPage extends StatelessWidget {
   Widget _buttonSignOut() {
     return SafeArea(
         child: Container(
-          margin: EdgeInsets.only(top: 10, right: 20),
+          margin: EdgeInsets.only(right: 20),
           alignment: Alignment.topRight,
           child: IconButton(
             onPressed: () => controller.signOut(),
@@ -72,6 +79,19 @@ class ClientProfileInfoPage extends StatelessWidget {
             iconSize: 30,
           ),
         )
+    );
+  }
+
+  Widget _buttonGoToRoles() {
+    return Container(
+      margin: EdgeInsets.only(top: 10, right: 20),
+      alignment: Alignment.topRight,
+      child: IconButton(
+        onPressed: () => controller.goToRoles(),
+        icon: Icon(Icons.supervised_user_circle),
+        color: Colors.white,
+        iconSize: 30,
+      ),
     );
   }
 

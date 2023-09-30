@@ -1,5 +1,4 @@
 import 'package:delivery_app/src/pages/client/profile/info/client_profile_info_page.dart';
-import 'package:delivery_app/src/pages/delivery/orders/list/delivery_orders_list_page.dart';
 import 'package:delivery_app/src/pages/restaurant/categories/create/restaurant_categories_create_page.dart';
 import 'package:delivery_app/src/pages/restaurant/home/restaurant_home_controller.dart';
 import 'package:delivery_app/src/pages/restaurant/orders/list/restaurant_orders_list_page.dart';

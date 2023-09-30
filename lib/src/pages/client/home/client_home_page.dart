@@ -24,7 +24,7 @@ class ClientHomePage extends StatelessWidget {
           children: [
             ClientProductsListPage(),
             DeliveryOrdersListPage(),
-            ClientProfileInfoPage()
+            ClientProfileInfoPage(),
           ],
         ),
       )
