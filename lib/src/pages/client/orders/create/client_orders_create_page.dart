@@ -60,7 +60,7 @@ class ClientOrdersCreatePage extends StatelessWidget {
               style: ElevatedButton.styleFrom(
                 padding: EdgeInsets.all(15)
               ),
-                onPressed: (){},
+                onPressed: () => controller.goToAddressList(),
                 child: Text(
                   "Confirmar Orden: ${controller.getTotal().toStringAsFixed(2)}\$",
                   style: TextStyle(
