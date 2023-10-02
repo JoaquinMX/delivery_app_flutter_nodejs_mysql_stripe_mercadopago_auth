@@ -65,7 +65,7 @@ class _MyAppState extends State<MyApp> {
             secondary: Colors.amberAccent,
             brightness: Brightness.light,
             onBackground: Colors.grey,
-            onPrimary: Colors.grey,
+            onPrimary: Colors.black,
             onSecondary: Colors.grey,
             error: Colors.grey,
             onError: Colors.grey,
