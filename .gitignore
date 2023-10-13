@@ -1,3 +1,6 @@
+lib/src/environment
+ios/runner/AppDelegate.swift
+android/app/src/main/AndroidManifest.xml
 # Miscellaneous
 *.class
 *.log

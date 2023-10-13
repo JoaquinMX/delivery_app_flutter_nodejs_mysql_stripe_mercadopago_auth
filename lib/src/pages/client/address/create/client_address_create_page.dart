@@ -3,30 +3,26 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class ClientAddressCreatePage extends StatelessWidget {
-
-  ClientAddressCreateController controller = Get.put(ClientAddressCreateController());
+  ClientAddressCreateController controller =
+      Get.put(ClientAddressCreateController());
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         body: Stack(
-          children: [
-            _backgroundCover(context),
-            _boxForm(context),
-            _textNewAddress(context),
-            _iconBack()
-          ],
-        )
-    );
+      children: [
+        _backgroundCover(context),
+        _boxForm(context),
+        _textNewAddress(context),
+        _iconBack()
+      ],
+    ));
   }
 
   Widget _backgroundCover(BuildContext context) {
     return Container(
       width: double.infinity,
-      height: MediaQuery
-          .of(context)
-          .size
-          .height * .35,
+      height: MediaQuery.of(context).size.height * .35,
       color: Colors.amber,
     );
   }
@@ -34,23 +30,11 @@ class ClientAddressCreatePage extends StatelessWidget {
   Widget _boxForm(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(
-          top: MediaQuery
-              .of(context)
-              .size
-              .height * .30,
-          left: 50,
-          right: 50
-      ),
-      decoration: BoxDecoration(
-          color: Colors.white,
-          boxShadow: <BoxShadow>[
-            BoxShadow(
-                color: Colors.black54,
-                blurRadius: 15,
-                offset: Offset(0, 0.75)
-            )
-          ]
-      ),
+          top: MediaQuery.of(context).size.height * .30, left: 50, right: 50),
+      decoration: BoxDecoration(color: Colors.white, boxShadow: <BoxShadow>[
+        BoxShadow(
+            color: Colors.black54, blurRadius: 15, offset: Offset(0, 0.75))
+      ]),
       child: SingleChildScrollView(
         child: Column(
           children: [
@@ -67,41 +51,31 @@ class ClientAddressCreatePage extends StatelessWidget {
 
   Widget _textFieldAddress() {
     return Container(
-      margin: EdgeInsets.symmetric(
-          horizontal: 30
-      ),
+      margin: EdgeInsets.symmetric(horizontal: 30),
       child: TextField(
         controller: controller.addressController,
         keyboardType: TextInputType.text,
         decoration: InputDecoration(
-            hintText: 'Calle',
-            prefixIcon: Icon(Icons.location_on)
-        ),
+            hintText: 'Calle', prefixIcon: Icon(Icons.location_on)),
       ),
     );
   }
 
   Widget _textFieldNeighborhood() {
     return Container(
-      margin: EdgeInsets.symmetric(
-          horizontal: 30
-      ),
+      margin: EdgeInsets.symmetric(horizontal: 30),
       child: TextField(
         controller: controller.neighborhoodController,
         keyboardType: TextInputType.text,
         decoration: InputDecoration(
-            hintText: 'Colonia',
-            prefixIcon: Icon(Icons.location_city)
-        ),
+            hintText: 'Colonia', prefixIcon: Icon(Icons.location_city)),
       ),
     );
   }
 
   Widget _textFieldRefPoint(context) {
     return Container(
-      margin: EdgeInsets.symmetric(
-          horizontal: 30
-      ),
+      margin: EdgeInsets.symmetric(horizontal: 30),
       child: TextField(
         controller: controller.refPointController,
         keyboardType: TextInputType.text,
@@ -109,9 +83,7 @@ class ClientAddressCreatePage extends StatelessWidget {
         autofocus: false,
         focusNode: AlwaysDisabledFocusNode(),
         decoration: InputDecoration(
-            hintText: 'Referencias',
-            prefixIcon: Icon(Icons.map)
-        ),
+            hintText: 'Referencias', prefixIcon: Icon(Icons.map)),
       ),
     );
   }
@@ -119,24 +91,19 @@ class ClientAddressCreatePage extends StatelessWidget {
   Widget _buttonCreate(BuildContext context) {
     return Container(
       width: double.infinity,
-      margin: EdgeInsets.only(
-          left: 30,
-          right: 30,
-          top: 30,
-          bottom: 15
-      ),
+      margin: EdgeInsets.only(left: 30, right: 30, top: 30, bottom: 15),
       child: ElevatedButton(
           style: ElevatedButton.styleFrom(
-              padding: EdgeInsets.symmetric(vertical: 15)
-          ),
-          onPressed: () {},
+              padding: EdgeInsets.symmetric(vertical: 15)),
+          onPressed: () {
+            controller.createaddress();
+          },
           child: Text(
             'Añadir dirección',
             style: TextStyle(
               color: Colors.black,
             ),
-          )
-      ),
+          )),
     );
   }
 
@@ -159,22 +126,16 @@ class ClientAddressCreatePage extends StatelessWidget {
                 ),
               ),
             ],
-          )
-      ),
+          )),
     );
   }
 
   Widget _textYourInfo() {
     return Container(
-      margin: EdgeInsets.only(
-          top: 40,
-          bottom: 30
-      ),
+      margin: EdgeInsets.only(top: 40, bottom: 30),
       child: Text(
         'Ingresa tu dirección',
-        style: TextStyle(
-            color: Colors.black
-        ),
+        style: TextStyle(color: Colors.black),
       ),
     );
   }
@@ -182,16 +143,13 @@ class ClientAddressCreatePage extends StatelessWidget {
   Widget _iconBack() {
     return SafeArea(
       child: Container(
-        margin: EdgeInsets.only(
-          left: 15
-        ),
+        margin: EdgeInsets.only(left: 15),
         child: IconButton(
             onPressed: () => Get.back(),
             icon: Icon(
               Icons.arrow_back_ios,
               size: 32,
-            )
-        ),
+            )),
       ),
     );
   }

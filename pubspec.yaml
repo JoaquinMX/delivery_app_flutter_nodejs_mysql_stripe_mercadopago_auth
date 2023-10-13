@@ -31,7 +31,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  get: ^4.6.5
+  get: ^4.6.6
   get_storage: ^2.1.1
   image_picker: ^0.8.7+3
   sn_progress_dialog: ^1.1.3
