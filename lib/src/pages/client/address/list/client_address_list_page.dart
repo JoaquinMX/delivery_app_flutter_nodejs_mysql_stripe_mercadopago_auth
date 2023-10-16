@@ -18,9 +18,14 @@ class ClientAddressListPage extends StatelessWidget {
         ),
         actions: [_iconAddressCreate()],
       ),
-      body: Stack(
-        children: [_textSelectAddress(), _listAddress()],
-      ),
+      body: GetBuilder<ClientAddressListController>(builder: (value) {
+        return Stack(
+          children: [
+            _textSelectAddress(),
+            _listAddress(),
+          ],
+        );
+      }),
     );
   }
 
@@ -48,45 +53,42 @@ class ClientAddressListPage extends StatelessWidget {
   }
 
   Widget _radioSelectorAddress(Address address, int index) {
-    return Obx(
-      () => Container(
-        margin: EdgeInsets.symmetric(horizontal: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Row(
-              children: [
-                Radio(
-                  value: index,
-                  groupValue: controller.radioValue.value,
-                  onChanged: (value) =>
-                      controller.handleRadioValueChange(value!),
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      address.address ?? "",
-                      style: TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.bold,
-                      ),
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Row(
+            children: [
+              Radio(
+                value: index,
+                groupValue: controller.radioValue.value,
+                onChanged: (value) => controller.handleRadioValueChange(value!),
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    address.address ?? "",
+                    style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.bold,
                     ),
-                    Text(
-                      address.neighborhood ?? "",
-                      style: TextStyle(
-                        fontSize: 12,
-                      ),
+                  ),
+                  Text(
+                    address.neighborhood ?? "",
+                    style: TextStyle(
+                      fontSize: 12,
                     ),
-                  ],
-                )
-              ],
-            ),
-            Divider(
-              color: Colors.black,
-            )
-          ],
-        ),
+                  ),
+                ],
+              )
+            ],
+          ),
+          Divider(
+            color: Colors.black,
+          )
+        ],
       ),
     );
   }

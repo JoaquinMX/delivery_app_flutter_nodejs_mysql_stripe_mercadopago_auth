@@ -1,6 +1,7 @@
 import 'package:delivery_app/src/models/address.dart';
 import 'package:delivery_app/src/models/response_api.dart';
 import 'package:delivery_app/src/models/user.dart';
+import 'package:delivery_app/src/pages/client/address/list/client_address_list_controller.dart';
 import 'package:delivery_app/src/pages/client/address/map/client_address_map_page.dart';
 import 'package:delivery_app/src/providers/address_provider.dart';
 import 'package:flutter/cupertino.dart';
@@ -12,6 +13,7 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 class ClientAddressCreateController extends GetxController {
   User userSession = User.fromJson(GetStorage().read('user') ?? {});
   AddressProvider addressProvider = AddressProvider();
+  ClientAddressListController clientAddressListController = Get.find();
   TextEditingController addressController = TextEditingController();
   TextEditingController neighborhoodController = TextEditingController();
   TextEditingController refPointController = TextEditingController();
@@ -34,7 +36,7 @@ class ClientAddressCreateController extends GetxController {
     }
   }
 
-  void createaddress() async {
+  void createAddress() async {
     String addressName = addressController.text.trim();
     String neighborhoodName = neighborhoodController.text.trim();
     if (isValidForm(addressName, neighborhoodName)) {
@@ -49,7 +51,12 @@ class ClientAddressCreateController extends GetxController {
       ResponseApi responseApi = await addressProvider.create(address);
       Fluttertoast.showToast(
           msg: responseApi.message ?? "", toastLength: Toast.LENGTH_LONG);
-      Get.back();
+      if (responseApi.success == true) {
+        address.id = responseApi.data;
+        GetStorage().write("address", address.toJson());
+        clientAddressListController.update();
+        Get.back();
+      }
     }
   }
 

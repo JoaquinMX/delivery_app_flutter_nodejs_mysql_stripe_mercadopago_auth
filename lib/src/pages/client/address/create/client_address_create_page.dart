@@ -96,7 +96,7 @@ class ClientAddressCreatePage extends StatelessWidget {
           style: ElevatedButton.styleFrom(
               padding: EdgeInsets.symmetric(vertical: 15)),
           onPressed: () {
-            controller.createaddress();
+            controller.createAddress();
           },
           child: Text(
             'Añadir dirección',
