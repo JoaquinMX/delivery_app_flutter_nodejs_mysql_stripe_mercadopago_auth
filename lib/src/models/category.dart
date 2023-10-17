@@ -16,10 +16,10 @@ class Category {
   });
 
   factory Category.fromJson(Map<String, dynamic> json) => Category(
-    id: json["id"],
-    name: json["name"],
-    description: json["description"],
-  );
+        id: json["id"],
+        name: json["name"],
+        description: json["description"],
+      );
 
   static List<Category> fromJsonList(List<dynamic> jsonList) {
     List<Category> toList = [];
@@ -33,8 +33,8 @@ class Category {
   }
 
   Map<String, dynamic> toJson() => {
-    "id": id,
-    "name": name,
-    "description": description,
-  };
+        "id": id,
+        "name": name,
+        "description": description,
+      };
 }

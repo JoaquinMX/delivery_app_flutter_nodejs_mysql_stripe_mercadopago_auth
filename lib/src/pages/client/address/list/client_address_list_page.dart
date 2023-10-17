@@ -1,5 +1,6 @@
 import 'package:delivery_app/src/models/address.dart';
 import 'package:delivery_app/src/pages/client/address/list/client_address_list_controller.dart';
+import 'package:delivery_app/src/widgets/common_button.dart';
 import 'package:delivery_app/src/widgets/no_data_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -10,6 +11,11 @@ class ClientAddressListPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      bottomNavigationBar: CommonButton(
+        onPressed: () => controller.createOrder(),
+        text: "Continuar",
+        height: 50,
+      ),
       appBar: AppBar(
         iconTheme: IconThemeData(color: Colors.black),
         title: Text(

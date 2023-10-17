@@ -5,30 +5,24 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
 class RestaurantCategoriesCreateController extends GetxController {
-
   TextEditingController nameController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
   CategoriesProvider categoriesProvider = CategoriesProvider();
 
   Future<void> createCategory() async {
-
     String name = nameController.text;
     String description = descriptionController.text;
 
-    if (name.isNotEmpty  && description.isNotEmpty) {
-      Category category = Category(
-          name: name,
-          description: description
-      );
+    if (name.isNotEmpty && description.isNotEmpty) {
+      Category category = Category(name: name, description: description);
       ResponseApi responseApi = await categoriesProvider.create(category);
       Get.snackbar('Proceso terminado con éxito', responseApi.message ?? '');
       if (responseApi.success == true) {
         clearForm();
       }
-
-    }
-    else {
-      Get.snackbar('Formulario no valido', 'Ingresa todos los campos para crear la categoria');
+    } else {
+      Get.snackbar('Formulario no valido',
+          'Ingresa todos los campos para crear la categoria');
     }
   }
 
