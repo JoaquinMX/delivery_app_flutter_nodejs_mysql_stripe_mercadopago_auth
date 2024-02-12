@@ -14,6 +14,10 @@
     <string>Se necesitan permisos para utilizar la localización</string>
     <key>NSLocationAlwaysUsageDescription</key>
     <string>Se necesitan permisos para utilizar la localización</string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+	<string>tel</string>
+	</array>
 	<key>CFBundleDisplayName</key>
 	<string>Delivery App</string>
 	<key>CFBundleExecutable</key>
