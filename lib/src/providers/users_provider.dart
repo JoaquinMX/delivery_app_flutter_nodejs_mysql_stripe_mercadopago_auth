@@ -97,4 +97,21 @@ class UsersProvider extends GetConnect {
     final response = await request.send();
     return response.stream.transform(utf8.decoder);
   }
+
+  Future<List<User>> findDeliveryUser() async {
+    Response response = await get("$url/findDeliveryUser", headers: {
+      "Content-Type": "application/json",
+      'Authorization': userSession.sessionToken ?? ""
+    });
+
+    if (response.statusCode == 401) {
+      Get.snackbar('Petición denegada',
+          'Tu usuario no tiene permitido obtener esta información');
+      return [];
+    }
+
+    List<User> users = User.fromJsonList(response.body);
+
+    return users;
+  }
 }

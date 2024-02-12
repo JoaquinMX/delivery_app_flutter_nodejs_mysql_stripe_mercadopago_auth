@@ -1,4 +1,5 @@
 import 'package:delivery_app/src/models/product.dart';
+import 'package:delivery_app/src/models/user.dart';
 import 'package:delivery_app/src/pages/restaurant/orders/detail/restaurant_orders_detail_controller.dart';
 import 'package:delivery_app/src/utils/relative_time_util.dart';
 import 'package:delivery_app/src/widgets/no_data_widget.dart';
@@ -26,16 +27,20 @@ class RestaurantOrderDetailPage extends StatelessWidget {
           : NoDataWidget(
               text: "No hay ningún producto agregado por el momento",
             ),
-      bottomNavigationBar: Container(
-        color: const Color.fromRGBO(245, 245, 245, 1),
-        height: size.height * .45,
-        child: Column(
-          children: [
-            _dataDate(),
-            _dataClient(),
-            _dataAddress(),
-            _totalToPay(),
-          ],
+      bottomNavigationBar: SafeArea(
+        child: Container(
+          color: const Color.fromRGBO(245, 245, 245, 1),
+          height: size.height * .45,
+          child: Obx(
+            () => Column(
+              children: [
+                _dataDate(),
+                _dataClient(),
+                _dataAddress(),
+                _totalToPay(),
+              ],
+            ),
+          ),
         ),
       ),
     );
@@ -104,18 +109,32 @@ class RestaurantOrderDetailPage extends StatelessWidget {
         ),
         Container(
           width: double.infinity,
+          alignment: Alignment.centerLeft,
+          margin: EdgeInsets.only(left: 30),
+          child: const Text(
+            "Asignar Repartidor",
+            style: TextStyle(
+                fontStyle: FontStyle.italic,
+                color: Colors.amber,
+                fontWeight: FontWeight.bold),
+          ),
+        ),
+        _dropDownDeliveryUsers(controller.users),
+        const SizedBox(
+          height: 15,
+        ),
+        Container(
+          width: double.infinity,
           margin: const EdgeInsets.symmetric(horizontal: 30),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              Obx(
-                () => Container(
-                  child: Text(
-                    "Total: ${controller.getTotal().toStringAsFixed(2)}",
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
+              Container(
+                child: Text(
+                  "Total: ${controller.getTotal().toStringAsFixed(2)}",
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
                   ),
                 ),
               ),
@@ -141,9 +160,9 @@ class RestaurantOrderDetailPage extends StatelessWidget {
 
   Widget _dataClient() {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 20),
+      margin: const EdgeInsets.symmetric(horizontal: 20),
       child: ListTile(
-        title: Text("Cliente y telefono"),
+        title: const Text("Cliente y telefono"),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -153,34 +172,95 @@ class RestaurantOrderDetailPage extends StatelessWidget {
             Text(controller.order.client.phone)
           ],
         ),
-        trailing: Icon(Icons.person),
+        trailing: const Icon(Icons.person),
       ),
     );
   }
 
   Widget _dataAddress() {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 20),
+      margin: const EdgeInsets.symmetric(horizontal: 20),
       child: ListTile(
-        title: Text("Dirección de entrega"),
+        title: const Text("Dirección de entrega"),
         subtitle: Text(
           "${controller.order.address.address}, ${controller.order.address.neighborhood}",
         ),
-        trailing: Icon(Icons.location_on),
+        trailing: const Icon(Icons.location_on),
       ),
     );
   }
 
   Widget _dataDate() {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 20),
+      margin: const EdgeInsets.symmetric(horizontal: 20),
       child: ListTile(
-        title: Text("Fecha del pedido"),
+        title: const Text("Fecha del pedido"),
         subtitle: Text(
           "${RelativeTimeUtil.getRelativeTime(controller.order.timestamp ?? DateTime.now().day)}",
         ),
-        trailing: Icon(Icons.timer),
+        trailing: const Icon(Icons.timer),
       ),
     );
+  }
+
+  Widget _dropDownDeliveryUsers(List<User> users) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: DropdownButton(
+        underline: Container(
+          alignment: Alignment.centerRight,
+          child: const Icon(
+            Icons.arrow_drop_down_circle,
+            color: Colors.amber,
+          ),
+        ),
+        elevation: 3,
+        isExpanded: true,
+        hint: const Text(
+          'Seleccionar repartidor',
+        ),
+        items: _dropDownItems(users),
+        value: controller.idDeliveryUser.value == ''
+            ? null
+            : controller.idDeliveryUser.value,
+        onChanged: (option) {
+          controller.idDeliveryUser.value = option.toString();
+        },
+      ),
+    );
+  }
+
+  List<DropdownMenuItem<String?>> _dropDownItems(List<User> users) {
+    List<DropdownMenuItem<String>> list = [];
+    users.forEach((user) {
+      list.add(DropdownMenuItem(
+        value: user.id,
+        child: Row(
+          children: [
+            SizedBox(
+                height: 40,
+                width: 40,
+                child: FadeInImage(
+                  image: user.image != null
+                      ? NetworkImage(user.image!)
+                      : const AssetImage(
+                          'assets/img/no-image.png',
+                        ) as ImageProvider,
+                  fit: BoxFit.cover,
+                  fadeInDuration: const Duration(milliseconds: 50),
+                  placeholder: const AssetImage(
+                    'assets/img/no-image.png',
+                  ),
+                )),
+            SizedBox(
+              width: 10,
+            ),
+            Text("${user.name} ${user.lastname}"),
+          ],
+        ),
+      ));
+    });
+
+    return list;
   }
 }
