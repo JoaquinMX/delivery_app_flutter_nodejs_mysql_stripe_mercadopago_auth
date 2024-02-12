@@ -25,8 +25,38 @@ class OrdersProvider extends GetConnect {
     return orders;
   }
 
+  Future<List<Order>> findByIdDeliveryAndStatus(
+      String idDelivery, String status) async {
+    Response response =
+        await get("$url/findByDeliveryAndStatus/$idDelivery/$status", headers: {
+      "Content-Type": "application/json",
+      'Authorization': userSession.sessionToken ?? ""
+    });
+
+    if (response.statusCode == 401) {
+      Get.snackbar('Petición denegada',
+          'Tu usuario no tiene permitido obtener esta información');
+      return [];
+    }
+    List<Order> orders = Order.fromJsonList(response.body);
+
+    return orders;
+  }
+
   Future<ResponseApi> create(Order order) async {
     Response response = await post("$url/create", order.toJson(), headers: {
+      "Content-Type": "application/json",
+      'Authorization': userSession.sessionToken ?? ""
+    });
+
+    ResponseApi responseApi = ResponseApi.fromJson(response.body);
+
+    return responseApi;
+  }
+
+  Future<ResponseApi> updateStatus(Order order) async {
+    Response response =
+        await put("$url/updateStatus", order.toJson(), headers: {
       "Content-Type": "application/json",
       'Authorization': userSession.sessionToken ?? ""
     });

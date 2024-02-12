@@ -13,7 +13,7 @@ class Order {
   String idClient;
   String? idDelivery;
   String idAddress;
-  String? status;
+  String status;
   double lat;
   double lng;
   int? timestamp;
@@ -26,7 +26,7 @@ class Order {
     required this.idClient,
     this.idDelivery,
     required this.idAddress,
-    this.status,
+    required this.status,
     required this.lat,
     required this.lng,
     this.timestamp,

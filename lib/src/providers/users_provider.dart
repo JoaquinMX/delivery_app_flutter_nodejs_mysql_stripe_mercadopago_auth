@@ -12,11 +12,17 @@ import '../models/response_api.dart';
 
 class UsersProvider extends GetConnect {
   String url = Environment.API_URL + "/api/users";
-  User userSession = User.fromJson(GetStorage().read('user') ?? {});
+  User? userSession;
   Future<Response> create(User user) async {
     Response response = await post("$url/create", user.toJson(),
         headers: {"Content-Type": "application/json"});
     return response;
+  }
+
+  UsersProvider() {
+    if (GetStorage().read("user") != null) {
+      userSession = User.fromJson(GetStorage().read("user"));
+    }
   }
 
   Future<Stream> createWithImage(User user, File image) async {
@@ -71,7 +77,7 @@ class UsersProvider extends GetConnect {
     Response response =
         await put("$url/updateWithoutImage", user.toJson(), headers: {
       "Content-Type": "application/json",
-      'Authorization': userSession.sessionToken ?? ''
+      'Authorization': userSession!.sessionToken ?? ''
     });
 
     if (response.body == null) {
@@ -88,7 +94,7 @@ class UsersProvider extends GetConnect {
   Future<Stream> updateWithImage(User user, File image) async {
     Uri uri = Uri.http(Environment.API_URL_OLD, 'api/users/update');
     final request = http.MultipartRequest('PUT', uri);
-    request.headers['Authorization'] = userSession.sessionToken ?? "";
+    request.headers['Authorization'] = userSession!.sessionToken ?? "";
     request.files.add(http.MultipartFile(
         'image', http.ByteStream(image.openRead().cast()), await image.length(),
         filename: basename(image.path)));
@@ -101,7 +107,7 @@ class UsersProvider extends GetConnect {
   Future<List<User>> findDeliveryUser() async {
     Response response = await get("$url/findDeliveryUser", headers: {
       "Content-Type": "application/json",
-      'Authorization': userSession.sessionToken ?? ""
+      'Authorization': userSession!.sessionToken ?? ""
     });
 
     if (response.statusCode == 401) {

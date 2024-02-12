@@ -7,12 +7,18 @@ import 'package:get_storage/get_storage.dart';
 import '../../models/user.dart';
 
 class LoginController extends GetxController {
-  User user = User.fromJson(GetStorage().read('user') ?? {});
+  User? user;
 
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
   UsersProvider usersProvider = UsersProvider();
+
+  LoginController() {
+    if (GetStorage().read("user") != null) {
+      user = User.fromJson(GetStorage().read("user"));
+    }
+  }
 
   void goToRegisterPage() {
     Get.toNamed('/register');
@@ -22,18 +28,16 @@ class LoginController extends GetxController {
     String email = emailController.text.trim();
     String password = passwordController.text.trim();
 
-
     if (isValidForm(email, password)) {
       ResponseApi responseApi = await usersProvider.login(email, password);
       if (responseApi.success == true) {
         GetStorage().write('user', responseApi.data);
-        if(user.roles!.length > 1) {
+        user = User.fromJson(responseApi.data);
+        if (user!.roles!.length > 1) {
           goToRolesPage();
         }
         goToClientHomePage();
-
-      }
-      else {
+      } else {
         Get.snackbar('Login Fallido', responseApi.message ?? '');
       }
     }
@@ -48,17 +52,16 @@ class LoginController extends GetxController {
   }
 
   bool isValidForm(String email, String password) {
-
     if (email.isEmpty) {
-      Get.snackbar('Formulario no valido', 'Debes ingresar un correo electrónico');
+      Get.snackbar(
+          'Formulario no valido', 'Debes ingresar un correo electrónico');
       return false;
     }
 
-    if(!GetUtils.isEmail(email)) {
+    if (!GetUtils.isEmail(email)) {
       Get.snackbar('Formulario no valido', 'El correo electrónico no existe');
       return false;
     }
-
 
     if (password.isEmpty) {
       Get.snackbar('Formulario no valido', 'Debes ingresar tu contraseña');

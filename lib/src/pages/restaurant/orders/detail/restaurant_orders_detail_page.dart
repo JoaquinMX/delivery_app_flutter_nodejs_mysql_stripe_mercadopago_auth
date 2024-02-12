@@ -7,8 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class RestaurantOrderDetailPage extends StatelessWidget {
-  RestaurantOrdersDetailContorller controller =
-      Get.put(RestaurantOrdersDetailContorller());
+  RestaurantOrdersDetailController controller =
+      Get.put(RestaurantOrdersDetailController());
 
   @override
   Widget build(BuildContext context) {
@@ -111,15 +111,17 @@ class RestaurantOrderDetailPage extends StatelessWidget {
           width: double.infinity,
           alignment: Alignment.centerLeft,
           margin: EdgeInsets.only(left: 30),
-          child: const Text(
-            "Asignar Repartidor",
-            style: TextStyle(
+          child: Text(
+            controller.order.status == "PAGADO"
+                ? "Asignar Repartidor"
+                : "Repartidor",
+            style: const TextStyle(
                 fontStyle: FontStyle.italic,
                 color: Colors.amber,
                 fontWeight: FontWeight.bold),
           ),
         ),
-        _dropDownDeliveryUsers(controller.users),
+        _dropDownDeliveryUsers(controller.users, controller.order.status),
         const SizedBox(
           height: 15,
         ),
@@ -144,9 +146,14 @@ class RestaurantOrderDetailPage extends StatelessWidget {
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.all(15),
                   ),
-                  onPressed: () {},
-                  child: const Text(
-                    "Enviar Orden",
+                  onPressed: controller.order.status == "PAGADO"
+                      ? () => controller.updateOrder()
+                      : null,
+                  //onPressed: () => controller.updateOrder(),
+                  child: Text(
+                    controller.order.status == "PAGADO"
+                        ? "Enviar Orden"
+                        : "Enviado",
                     style: TextStyle(color: Colors.black),
                   ),
                 ),
@@ -203,15 +210,15 @@ class RestaurantOrderDetailPage extends StatelessWidget {
     );
   }
 
-  Widget _dropDownDeliveryUsers(List<User> users) {
+  Widget _dropDownDeliveryUsers(List<User> users, String status) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: DropdownButton(
+      child: DropdownButton<String>(
         underline: Container(
           alignment: Alignment.centerRight,
-          child: const Icon(
+          child: Icon(
             Icons.arrow_drop_down_circle,
-            color: Colors.amber,
+            color: status == "PAGADO" ? Colors.amber : Colors.grey,
           ),
         ),
         elevation: 3,
@@ -219,48 +226,70 @@ class RestaurantOrderDetailPage extends StatelessWidget {
         hint: const Text(
           'Seleccionar repartidor',
         ),
-        items: _dropDownItems(users),
-        value: controller.idDeliveryUser.value == ''
+        items: _dropDownItems(users, controller.idDeliveryUser.value),
+        value: controller.idDeliveryUser.value == ""
             ? null
             : controller.idDeliveryUser.value,
-        onChanged: (option) {
-          controller.idDeliveryUser.value = option.toString();
-        },
+        onChanged: controller.order.status == "PAGADO"
+            ? (option) {
+                controller.idDeliveryUser.value = option.toString();
+              }
+            : null,
       ),
     );
   }
 
-  List<DropdownMenuItem<String?>> _dropDownItems(List<User> users) {
+  List<DropdownMenuItem<String>> _dropDownItems(
+      List<User> users, String? idDelivery) {
     List<DropdownMenuItem<String>> list = [];
-    users.forEach((user) {
-      list.add(DropdownMenuItem(
-        value: user.id,
-        child: Row(
-          children: [
-            SizedBox(
-                height: 40,
-                width: 40,
-                child: FadeInImage(
-                  image: user.image != null
-                      ? NetworkImage(user.image!)
-                      : const AssetImage(
-                          'assets/img/no-image.png',
-                        ) as ImageProvider,
-                  fit: BoxFit.cover,
-                  fadeInDuration: const Duration(milliseconds: 50),
-                  placeholder: const AssetImage(
-                    'assets/img/no-image.png',
-                  ),
-                )),
-            SizedBox(
-              width: 10,
-            ),
-            Text("${user.name} ${user.lastname}"),
-          ],
-        ),
-      ));
-    });
+    if (idDelivery != "" && users.isNotEmpty) {
+      list.add(
+          _userDropDownItem(users.firstWhere((user) => user.id == idDelivery)));
+    } else {
+      users.forEach((user) {
+        list.add(_userDropDownItem(user));
+      });
+    }
 
     return list;
+  }
+
+  DropdownMenuItem<String> _userDropDownItem(User user) {
+    return DropdownMenuItem(
+      value: user.id,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          SizedBox(
+              height: 40,
+              width: 40,
+              child: FadeInImage(
+                image: user.image != null
+                    ? NetworkImage(user.image!)
+                    : const AssetImage(
+                        'assets/img/no-image.png',
+                      ) as ImageProvider,
+                fit: BoxFit.cover,
+                fadeInDuration: const Duration(milliseconds: 50),
+                placeholder: const AssetImage(
+                  'assets/img/no-image.png',
+                ),
+              )),
+          SizedBox(
+            width: 10,
+          ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text("${user.name} ${user.lastname}"),
+              controller.order.status == "PAGADO"
+                  ? SizedBox()
+                  : Text("telefono: ${user.phone}"),
+            ],
+          )
+        ],
+      ),
+    );
   }
 }

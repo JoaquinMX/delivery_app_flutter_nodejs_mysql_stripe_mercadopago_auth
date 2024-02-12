@@ -39,14 +39,14 @@ class RolesPage extends StatelessWidget {
             margin: EdgeInsets.only(top: 15, bottom: 15),
             height: 100,
             child: FadeInImage(
-              image: NetworkImage(rol.image!),
+              image: NetworkImage(rol.image),
               fit: BoxFit.contain,
               fadeInDuration: Duration(milliseconds: 50),
               placeholder: AssetImage('assets/img/no-image.png'),
             ),
           ),
           Text(
-            rol.name ?? '',
+            rol.name,
             style: TextStyle(
               fontSize: 16,
               color: Colors.black

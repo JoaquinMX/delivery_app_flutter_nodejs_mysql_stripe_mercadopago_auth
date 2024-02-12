@@ -49,6 +49,7 @@ class ClientAddressListController extends GetxController {
     Order order = Order(
       idClient: user.id!,
       idAddress: storageAddress.id!,
+      status: "PAGADO",
       products: products,
       lat: storageAddress.lat,
       lng: storageAddress.lng,
