@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:delivery_app/src/models/order.dart';
+import 'package:delivery_app/src/providers/orders_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
@@ -9,6 +10,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart' as location;
 
 class DeliveryOrdersMapController extends GetxController {
+  OrdersProvider ordersProvider = OrdersProvider();
   Order order = Order.fromJson(Get.arguments['order']);
   CameraPosition initialPosition =
       CameraPosition(target: LatLng(25.696974, -100.316156), zoom: 14);
@@ -18,9 +20,14 @@ class DeliveryOrdersMapController extends GetxController {
 
   Completer<GoogleMapController> mapController = Completer();
   Position? position;
+  Map<MarkerId, Marker> markers = <MarkerId, Marker>{}.obs;
+  BitmapDescriptor? deliveryMarker;
+  BitmapDescriptor? homeMarker;
+
+  StreamSubscription? positionSubscribe;
 
   DeliveryOrdersMapController() {
-    print("Order: ${order.toJson()}");
+    createMarkers();
     checkGPS(); // Verify if GPS is active and get permission
   }
 
@@ -63,6 +70,40 @@ class DeliveryOrdersMapController extends GetxController {
     }
   }
 
+  Future<BitmapDescriptor> createMarkerFromAssets(String path) async {
+    ImageConfiguration configuration = ImageConfiguration();
+    BitmapDescriptor descriptor =
+        await BitmapDescriptor.fromAssetImage(configuration, path);
+    return descriptor;
+  }
+
+  void addMarker(String markerId, double lat, double lng, String title,
+      String content, BitmapDescriptor iconMarker) {
+    MarkerId id = MarkerId(markerId);
+    Marker marker = Marker(
+      markerId: id,
+      icon: iconMarker,
+      position: LatLng(lat, lng),
+      infoWindow: InfoWindow(title: title, snippet: content),
+    );
+
+    markers[id] = marker;
+  }
+
+  void createMarkers() async {
+    deliveryMarker =
+        await createMarkerFromAssets('assets/img/delivery_little.png');
+    homeMarker = await createMarkerFromAssets('assets/img/home.png');
+    addMarker(
+      'home',
+      order.address.lat,
+      order.address.lng,
+      "Lugar de entrega",
+      "",
+      homeMarker!,
+    );
+  }
+
   void checkGPS() async {
     bool isLocationEnabled = await Geolocator.isLocationServiceEnabled();
 
@@ -80,8 +121,37 @@ class DeliveryOrdersMapController extends GetxController {
     try {
       await _determinePosition();
       position = await Geolocator.getLastKnownPosition(); // Current Lat y Lng
+      saveLocation();
       animateCameraPosition(
           position?.latitude ?? 25.696974, position?.longitude ?? -100.316156);
+      addMarker(
+        'delivery',
+        position?.latitude ?? 25.696974,
+        position?.longitude ?? -100.316156,
+        "Tu posición",
+        "",
+        deliveryMarker!,
+      );
+
+      LocationSettings locationSettings =
+          LocationSettings(accuracy: LocationAccuracy.best, distanceFilter: 1);
+
+      positionSubscribe =
+          Geolocator.getPositionStream(locationSettings: locationSettings)
+              .listen((currentPosition) {
+        //Posicion en tiempo real
+        position = currentPosition;
+        animateCameraPosition(position?.latitude ?? 25.696974,
+            position?.longitude ?? -100.316156);
+        addMarker(
+          'delivery',
+          position?.latitude ?? 25.696974,
+          position?.longitude ?? -100.316156,
+          "Tu posición",
+          "",
+          deliveryMarker!,
+        );
+      });
     } catch (e) {
       print("Error $e");
     }
@@ -137,5 +207,19 @@ class DeliveryOrdersMapController extends GetxController {
     // When we reach here, permissions are granted and we can
     // continue accessing the position of the device.
     return await Geolocator.getCurrentPosition();
+  }
+
+  void saveLocation() async {
+    if (position != null) {
+      order.lat = position!.latitude;
+      order.lng = position!.longitude;
+    }
+    await ordersProvider.updateLatLng(order);
+  }
+
+  @override
+  void onClose() {
+    super.onClose();
+    positionSubscribe?.cancel();
   }
 }

@@ -65,4 +65,16 @@ class OrdersProvider extends GetConnect {
 
     return responseApi;
   }
+
+  Future<ResponseApi> updateLatLng(Order order) async {
+    Response response =
+        await put("$url/updateLatLng", order.toJson(), headers: {
+      "Content-Type": "application/json",
+      'Authorization': userSession.sessionToken ?? ""
+    });
+
+    ResponseApi responseApi = ResponseApi.fromJson(response.body);
+
+    return responseApi;
+  }
 }
