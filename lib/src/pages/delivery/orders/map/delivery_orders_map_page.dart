@@ -11,8 +11,8 @@ class DeliveryOrdersMapPage extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
-    return Obx(
-      () => Scaffold(
+    return GetBuilder<DeliveryOrdersMapController>(
+      builder: (value) => Scaffold(
         body: Stack(
           children: [
             SizedBox(
@@ -202,6 +202,7 @@ class DeliveryOrdersMapPage extends StatelessWidget {
       myLocationButtonEnabled: false,
       myLocationEnabled: false,
       markers: Set<Marker>.of(controller.markers.values),
+      polylines: controller.polylines,
     );
   }
 

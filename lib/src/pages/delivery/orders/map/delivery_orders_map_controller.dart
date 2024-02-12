@@ -1,8 +1,10 @@
 import 'dart:async';
 
+import 'package:delivery_app/src/environment/environment.dart';
 import 'package:delivery_app/src/models/order.dart';
 import 'package:delivery_app/src/providers/orders_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
@@ -13,7 +15,7 @@ class DeliveryOrdersMapController extends GetxController {
   OrdersProvider ordersProvider = OrdersProvider();
   Order order = Order.fromJson(Get.arguments['order']);
   CameraPosition initialPosition =
-      CameraPosition(target: LatLng(25.696974, -100.316156), zoom: 14);
+      const CameraPosition(target: LatLng(25.696974, -100.316156), zoom: 14);
 
   LatLng? addressLatLng;
   var addressName = "".obs;
@@ -25,6 +27,9 @@ class DeliveryOrdersMapController extends GetxController {
   BitmapDescriptor? homeMarker;
 
   StreamSubscription? positionSubscribe;
+
+  Set<Polyline> polylines = <Polyline>{}.obs;
+  List<LatLng> points = [];
 
   DeliveryOrdersMapController() {
     createMarkers();
@@ -88,6 +93,7 @@ class DeliveryOrdersMapController extends GetxController {
     );
 
     markers[id] = marker;
+    update();
   }
 
   void createMarkers() async {
@@ -117,6 +123,27 @@ class DeliveryOrdersMapController extends GetxController {
     }
   }
 
+  Future<void> setPolylines(LatLng from, LatLng to) async {
+    PointLatLng pointFrom = PointLatLng(from.latitude, from.longitude);
+    PointLatLng pointTo = PointLatLng(to.latitude, to.longitude);
+    PolylineResult result = await PolylinePoints().getRouteBetweenCoordinates(
+        Environment.API_KEY_MAPS, pointFrom, pointTo);
+
+    for (PointLatLng point in result.points) {
+      points.add(LatLng(point.latitude, point.longitude));
+    }
+
+    Polyline polyline = Polyline(
+      polylineId: PolylineId("poly"),
+      color: Colors.amber,
+      points: points,
+      width: 5,
+    );
+
+    polylines.add(polyline);
+    update();
+  }
+
   void updateLocation() async {
     try {
       await _determinePosition();
@@ -132,6 +159,16 @@ class DeliveryOrdersMapController extends GetxController {
         "",
         deliveryMarker!,
       );
+      LatLng from = LatLng(
+        position?.latitude ?? 25.696974,
+        position?.longitude ?? -100.316156,
+      );
+      LatLng to = LatLng(
+        order.address.lat,
+        order.address.lng,
+      );
+
+      setPolylines(from, to);
 
       LocationSettings locationSettings =
           LocationSettings(accuracy: LocationAccuracy.best, distanceFilter: 1);
