@@ -28,28 +28,30 @@ class Product {
   });
 
   factory Product.fromJson(Map<String, dynamic> json) => Product(
-    id: json["id"] ?? '',
-    name: json["name"],
-    description: json["description"],
-    image1: json["image1"] ?? '',
-    image2: json["image2"] ?? '',
-    image3: json["image3"] ?? '',
-    id_category: json["id_category"],
-    price:  json["price"] != null ?  double.parse(json["price"].toString()) : 999999.99,
-    quantity: json["quantity"] != null ? json["quantity"] : null,
-  );
+        id: json["id"] ?? '',
+        name: json["name"],
+        description: json["description"],
+        image1: json["image1"] ?? '',
+        image2: json["image2"] ?? '',
+        image3: json["image3"] ?? '',
+        id_category: json["id_category"] ?? "",
+        price: json["price"] != null
+            ? double.parse(json["price"].toString())
+            : 999999.99,
+        quantity: json["quantity"] != null ? json["quantity"] : null,
+      );
 
   Map<String, dynamic> toJson() => {
-    "id": id,
-    "name": name,
-    "description": description,
-    "image1": image1,
-    "image2": image2,
-    "image3": image3,
-    "id_category": id_category,
-    "price": price,
-    "quantity": quantity,
-  };
+        "id": id,
+        "name": name,
+        "description": description,
+        "image1": image1,
+        "image2": image2,
+        "image3": image3,
+        "id_category": id_category,
+        "price": price,
+        "quantity": quantity,
+      };
 
   static List<Product> fromJsonList(List<dynamic> jsonList) {
     List<Product> toList = [];

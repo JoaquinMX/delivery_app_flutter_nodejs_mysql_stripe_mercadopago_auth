@@ -5,31 +5,29 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class ClientOrdersCreatePage extends StatelessWidget {
-
-  ClientOrdersCreateController controller = Get.put(ClientOrdersCreateController());
+  ClientOrdersCreateController controller =
+      Get.put(ClientOrdersCreateController());
 
   @override
   Widget build(BuildContext context) {
     return Obx(
-        () => Scaffold(
+      () => Scaffold(
         appBar: AppBar(
-          iconTheme: IconThemeData(
-            color: Colors.black
-          ),
+          iconTheme: IconThemeData(color: Colors.black),
           title: Text(
-              "Mi orden",
-            style: TextStyle(
-              color: Colors.black
-            ),
+            "Mi orden",
+            style: TextStyle(color: Colors.black),
           ),
         ),
         body: controller.selectedProducts.length > 0
             ? ListView(
-          children: controller.selectedProducts.map((Product singleProduct) {
-            return _cardProduct(singleProduct);
-          }).toList(),
-        )
-            : NoDataWidget(text: "No hay ningún producto agregado por el momento"),
+                children:
+                    controller.selectedProducts.map((Product singleProduct) {
+                  return _cardProduct(singleProduct);
+                }).toList(),
+              )
+            : NoDataWidget(
+                text: "No hay ningún producto agregado por el momento"),
         bottomNavigationBar: Container(
           color: Color.fromRGBO(245, 245, 245, 1),
           height: 120,
@@ -52,22 +50,16 @@ class ClientOrdersCreatePage extends StatelessWidget {
           SizedBox(
             height: 15,
           ),
-
           Container(
             width: double.infinity,
             margin: EdgeInsets.symmetric(horizontal: 30),
             child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                padding: EdgeInsets.all(15)
-              ),
+                style: ElevatedButton.styleFrom(padding: EdgeInsets.all(15)),
                 onPressed: () => controller.goToAddressList(),
                 child: Text(
                   "Confirmar Orden: ${controller.getTotal().toStringAsFixed(2)}\$",
-                  style: TextStyle(
-                    color: Colors.black
-                  ),
-                )
-            ),
+                  style: TextStyle(color: Colors.black),
+                )),
           ),
         ],
       ),
@@ -91,9 +83,8 @@ class ClientOrdersCreatePage extends StatelessWidget {
                         ? product.name.substring(0, 20) + "..."
                         : product.name,
                     style: TextStyle(
-                      overflow: TextOverflow.clip,
-                      fontWeight: FontWeight.bold
-                    ),
+                        overflow: TextOverflow.clip,
+                        fontWeight: FontWeight.bold),
                   ),
                 ),
                 SizedBox(
@@ -105,10 +96,7 @@ class ClientOrdersCreatePage extends StatelessWidget {
           ),
           Spacer(),
           Column(
-            children: [
-              _textPrice(product),
-              _iconDelete(product)
-            ],
+            children: [_textPrice(product), _iconDelete(product)],
           )
         ],
       ),
@@ -121,10 +109,10 @@ class ClientOrdersCreatePage extends StatelessWidget {
         icon: Icon(
           Icons.delete,
           color: Colors.red,
-        )
-    );
+        ));
   }
-  Widget _textPrice(Product product)  {
+
+  Widget _textPrice(Product product) {
     return Container(
       margin: EdgeInsets.only(top: 10),
       child: Text(
@@ -164,10 +152,9 @@ class ClientOrdersCreatePage extends StatelessWidget {
             decoration: BoxDecoration(
                 color: Colors.black12,
                 borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(8),
-                bottomLeft: Radius.circular(8),
-              )
-            ),
+                  topLeft: Radius.circular(8),
+                  bottomLeft: Radius.circular(8),
+                )),
             child: Text("-"),
           ),
         ),
@@ -176,8 +163,7 @@ class ClientOrdersCreatePage extends StatelessWidget {
           color: Colors.black12,
           child: Text(product.quantity.toString().length < 2
               ? "${" " + product.quantity!.toString()} "
-              : product.quantity.toString()
-          ),
+              : product.quantity.toString()),
         ),
         GestureDetector(
           onTap: () => controller.addItem(product),
@@ -188,8 +174,7 @@ class ClientOrdersCreatePage extends StatelessWidget {
                 borderRadius: BorderRadius.only(
                   topRight: Radius.circular(8),
                   bottomRight: Radius.circular(8),
-                )
-            ),
+                )),
             child: Text("+"),
           ),
         ),

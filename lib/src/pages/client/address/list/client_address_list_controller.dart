@@ -52,6 +52,8 @@ class ClientAddressListController extends GetxController {
       products: products,
       lat: storageAddress.lat,
       lng: storageAddress.lng,
+      address: storageAddress,
+      client: user,
     );
 
     ResponseApi responseApi = await ordersProvider.create(order);

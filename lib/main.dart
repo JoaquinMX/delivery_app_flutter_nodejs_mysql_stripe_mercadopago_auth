@@ -12,6 +12,7 @@ import 'package:delivery_app/src/pages/home/home_page.dart';
 import 'package:delivery_app/src/pages/login/login_page.dart';
 import 'package:delivery_app/src/pages/register/register_page.dart';
 import 'package:delivery_app/src/pages/restaurant/home/restaurant_home_page.dart';
+import 'package:delivery_app/src/pages/restaurant/orders/detail/restaurant_orders_detail_page.dart';
 import 'package:delivery_app/src/pages/restaurant/orders/list/restaurant_orders_list_page.dart';
 import 'package:delivery_app/src/pages/roles/roles_page.dart';
 import 'package:flutter/material.dart';
@@ -69,6 +70,10 @@ class _MyAppState extends State<MyApp> {
           page: () => RestaurantOrdersListPage(),
         ),
         GetPage(
+          name: '/restaurant/orders/detail',
+          page: () => RestaurantOrderDetailPage(),
+        ),
+        GetPage(
           name: '/delivery/orders/list/',
           page: () => DeliveryOrdersListPage(),
         ),
@@ -102,24 +107,25 @@ class _MyAppState extends State<MyApp> {
         ),
         GetPage(
           name: '/client/payments/create/',
-          page: () => ClientPaymentsCreatePage(),
+          page: () => const ClientPaymentsCreatePage(),
         ),
       ],
       theme: ThemeData(
-          primaryColor: Colors.amber,
-          colorScheme: ColorScheme(
-            primary: Colors.amber,
-            secondary: Colors.amberAccent,
-            brightness: Brightness.light,
-            onBackground: Colors.grey,
-            onPrimary: Colors.black,
-            onSecondary: Colors.grey,
-            error: Colors.grey,
-            onError: Colors.grey,
-            background: Colors.grey,
-            surface: Colors.grey,
-            onSurface: Colors.grey,
-          )),
+        primaryColor: Colors.amber,
+        colorScheme: const ColorScheme(
+          primary: Colors.black,
+          secondary: Colors.amberAccent,
+          brightness: Brightness.light,
+          onBackground: Colors.grey,
+          onPrimary: Colors.black,
+          onSecondary: Colors.grey,
+          error: Colors.grey,
+          onError: Colors.grey,
+          background: Colors.white,
+          surface: Colors.amber,
+          onSurface: Colors.black,
+        ),
+      ),
       navigatorKey: Get.key,
     );
   }

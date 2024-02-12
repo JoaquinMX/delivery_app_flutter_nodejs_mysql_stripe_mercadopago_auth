@@ -10,9 +10,9 @@ class User {
 
   String? id;
   String? email;
-  String? name;
-  String? lastname;
-  String? phone;
+  String name;
+  String lastname;
+  String phone;
   String? image;
   String? password;
   String? sessionToken;

@@ -27,7 +27,7 @@ class Address {
 
   factory Address.fromJson(Map<String, dynamic> json) => Address(
         id: json["id"],
-        address: json["address"],
+        address: json["address"] ?? "",
         neighborhood: json["neighborhood"],
         idUser: json["id_user"],
         lat: json["lat"]?.toDouble(),
